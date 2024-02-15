@@ -1,13 +1,16 @@
 class UsersController < ApplicationController
+  
   def index
     @users = User.all
     @user = current_user
-    
+    @book = Book.new
+    # @books = Book.all
   end
 
   def show
     @user = User.find_by(id: params[:id])
-    @books = @user.book
+    @books = @user.books
+    @book = Book.new
   end
 
   def edit
@@ -16,8 +19,13 @@ class UsersController < ApplicationController
   
   def update
     @user = User.find(params[:id])
-    @user.update(user_params)
+    if @user.update(user_params)
+      flash[:notice] = "You have updated user successfully."
     redirect_to user_path(@user)
+    else
+      @users = User.all
+      render :edit
+    end
     # if @user.update(user_params) # ユーザーの属性を更新
     # redirect_to user_path(@user) # ユーザーの詳細ページへのリダイレクト
     # else
@@ -29,5 +37,12 @@ class UsersController < ApplicationController
   def user_params
     params.require(:user).permit(:name, :profile_image, :introduction)
   end
-
+  
+  def is_matching_login_user
+    user = User.find(params[:id])
+    unless user.id == current_user.id
+      redirect_to user_path(current_user.id)
+    end
+  end
+  
 end

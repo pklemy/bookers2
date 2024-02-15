@@ -1,8 +1,30 @@
+<div>
+  <%= flash[:notice] %>
+</div>
 
- <%= render 'tenplate',user:@user %>
+<% if @books.any? %>
+  <% @books.each do |book| %>
+<% if book.errors.any? %>
+  <%= book.errors.count %>error prohibited this obj from being saved:
+  <ul>
+    <% book.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+<% end %>
+ <% end %>
+<% end %>
+
+<div class="container px-5 px-sm-0">
+<div class="row">
+<div class="col-md-3">
+ <%= render 'tenplate',user: @user %>
+</div>
  
- <table>
+ 
+ <div class="col-md-8 offset-md-1">
  <h1>Books</h1>
+ <table class='table table-hover table-inverse'>
   <thead>
     <tr>
       <th>Title</th>
@@ -20,6 +42,7 @@
    <% end %>
  </tr>
 </table>
+</div>
 <!--部分テンプレート---->
 <!--<h1>User info </h1>-->
 <!--<%#= form_with model: User.new do |f| %>-->
